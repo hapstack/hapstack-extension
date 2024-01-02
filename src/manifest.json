@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "pages/popup/index.html",
+    "default_title": "Hapstack"
+  },
+  "background": {
+    "service_worker": "background/index.ts",
+    "type": "module"
+  },
+  "permissions": [
+    "alarms",
+    "identity",
+    "identity.email",
+    "storage",
+    "webNavigation"
+  ]
+}

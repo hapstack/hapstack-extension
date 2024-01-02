@@ -1,0 +1,37 @@
+{
+  "name": "extension",
+  "displayName": "Hapstack",
+  "description": "Get more out of your SaaS tools.",
+  "private": true,
+  "version": "2.0.7",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf {.turbo,build,.cache,node_modules}",
+    "dev": "vite build --watch --mode development",
+    "build": "vite build",
+    "build:staging": "vite build --mode staging",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "app-constants": "workspace:*",
+    "parse-domain": "^8.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-config": "workspace:*",
+    "ui": "workspace:*",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.254",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.16",
+    "eslint-config-custom": "workspace:*",
+    "postcss": "^8.4.32",
+    "vite": "^5.0.10",
+    "vite-plugin-web-extension": "^4.1.1",
+    "vitest": "^1.1.1"
+  }
+}

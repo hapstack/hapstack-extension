@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["ui#build:icons"]
+    },
+    "dev": {
+      "dependsOn": ["ui#build:icons"]
+    }
+  }
+}

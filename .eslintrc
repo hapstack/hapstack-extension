@@ -1,0 +1,7 @@
+{
+  "extends": ["custom/base", "custom/react"],
+  "root": true,
+  "env": {
+    "webextensions": true
+  }
+}
