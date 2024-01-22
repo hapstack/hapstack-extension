@@ -1,18 +1,20 @@
-import { logout, openLoginTab } from '@src/background/auth'
-import type { User } from '@src/background/user'
-import { getCurrentUser } from '@src/background/user'
-import { AppConstants } from '@src/utils/constants'
-import { createContext, useContext, useEffect, useState } from 'react'
 import {
   Avatar,
   Icon,
   IconButton,
   Logo,
   Notification,
-  Sidebar,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
   Spacer,
   Spinner,
-} from 'ui'
+} from '@hapstack/ui'
+import { logout, openLoginTab } from '@src/background/auth'
+import type { User } from '@src/background/user'
+import { getCurrentUser } from '@src/background/user'
+import { Constants } from '@src/utils/constants'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 type PopupContextType = {
   loading: boolean
@@ -83,6 +85,11 @@ const PopupContainer = ({ children }: { children: React.ReactNode }) => {
 const PopupContent = () => {
   const { user } = usePopupState()
 
+  async function handleLogout() {
+    await logout()
+    openLoginTab()
+  }
+
   if (!user) return null
 
   return (
@@ -111,14 +118,16 @@ const PopupContent = () => {
           <p>
             Activity sharing is {user.isTracked ? 'enabled' : 'inactive'}.{' '}
             {!user.isTracked ? (
-              <button
-                onClick={() => openLoginTab()}
-                className={
-                  'inline-block font-medium text-accent underline-offset-2 hover:underline'
-                }
-              >
-                Enable
-              </button>
+              <span>
+                Please{' '}
+                <button
+                  className="underline"
+                  onClick={handleLogout}
+                >
+                  log out
+                </button>{' '}
+                and back in again to enable sharing.
+              </span>
             ) : null}
           </p>
         </div>
@@ -136,25 +145,24 @@ const SidebarMenu = () => {
   }
 
   return (
-    <Sidebar>
-      <Sidebar.Trigger asChild>
+    <Sheet>
+      <SheetTrigger asChild>
         <IconButton
           icon="menu"
           label="open menu"
           className="absolute inset-4 mt-1 text-xl"
         />
-      </Sidebar.Trigger>
-      <Sidebar.Content
+      </SheetTrigger>
+      <SheetContent
         hideCloseButton
-        position={'left'}
-        size="lg"
-        className="border-none bg-primary text-white"
+        side={'left'}
+        className="border-none bg-primary p-0 text-white"
       >
         <ul className="divide-y divide-secondary/30">
-          <li className="flex items-center gap-2 px-2 py-4">
+          <li className="flex items-center gap-2 px-3 py-4">
             <Icon name="user-circle-2" />
             <a
-              href={`${AppConstants.webAppUrl}/team/${user?.id}`}
+              href={`${Constants.webAppUrl}/team/${user?.id}`}
               target="_blank"
               className="underline-offset-2 hover:underline"
               rel="noreferrer"
@@ -172,7 +180,7 @@ const SidebarMenu = () => {
             </button>
           </li>
         </ul>
-      </Sidebar.Content>
-    </Sidebar>
+      </SheetContent>
+    </Sheet>
   )
 }

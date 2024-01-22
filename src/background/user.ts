@@ -1,7 +1,7 @@
 import { logger } from '@src/utils/logger'
 import { z } from 'zod'
 
-import { makeApiRequest } from './server'
+import { makeApiRequest } from '../utils/makeApiRequest'
 import { storage } from './storage'
 
 const userSchema = z.object({
@@ -33,4 +33,9 @@ export async function getCurrentUser() {
     logger.warning(`Could not fetch current user`)
     return null
   }
+}
+
+export async function isAuthenticated() {
+  const user = await storage.get.user()
+  return Boolean(user?.userId)
 }

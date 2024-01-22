@@ -50,6 +50,9 @@ export default defineConfig(({ mode }) => {
   return {
     root: rootDir,
     mode,
+    define: {
+      __EXT_VERSION__: JSON.stringify(process.env.npm_package_version),
+    },
     plugins: [
       react(),
       webExtension({

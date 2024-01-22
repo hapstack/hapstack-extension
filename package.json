@@ -3,7 +3,7 @@
   "displayName": "Hapstack",
   "description": "Get more out of your SaaS tools.",
   "private": true,
-  "version": "2.0.7",
+  "version": "2.1.2",
   "type": "module",
   "scripts": {
     "clean": "rm -rf {.turbo,build,.cache,node_modules}",
@@ -14,24 +14,25 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "app-constants": "workspace:*",
+    "@hapstack/constants": "workspace:*",
+    "date-fns": "^3.2.0",
     "parse-domain": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwind-config": "workspace:*",
-    "ui": "workspace:*",
+    "@hapstack/tailwind-config": "workspace:*",
+    "@hapstack/ui": "workspace:*",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.254",
-    "@types/react": "^18.2.46",
+    "@types/chrome": "^0.0.258",
+    "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
-    "eslint-config-custom": "workspace:*",
-    "postcss": "^8.4.32",
-    "vite": "^5.0.10",
+    "@hapstack/eslint-config": "workspace:*",
+    "postcss": "^8.4.33",
+    "vite": "^5.0.11",
     "vite-plugin-web-extension": "^4.1.1",
-    "vitest": "^1.1.1"
+    "vitest": "^1.2.1"
   }
 }

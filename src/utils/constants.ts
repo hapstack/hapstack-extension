@@ -1,9 +1,16 @@
-import { getAppConstants } from 'app-constants'
+import { getConstants } from '@hapstack/constants'
 
 export const ALARMS = {
-  Daily: 'daily',
-  Hourly: 'hourly',
+  DomainRefresh: {
+    name: 'DomainRefresh',
+    periodInMinutes: 60 * 24,
+  },
+  HistoryScan: {
+    name: 'HistoryScan',
+    periodInMinutes: 10,
+  },
 } as const
+
 export const SESSION_TRACKING_COOLDOWN = 1000 * 60 * 60 * 24 // 24 hours
 
 const appEnv =
@@ -13,4 +20,4 @@ const appEnv =
       ? 'staging'
       : 'local'
 
-export const AppConstants = getAppConstants(appEnv)
+export const Constants = getConstants(appEnv)

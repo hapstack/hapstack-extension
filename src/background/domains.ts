@@ -1,9 +1,8 @@
-import { SESSION_TRACKING_COOLDOWN } from '@src/utils/constants'
 import { logger } from '@src/utils/logger'
 import { parseDomain, ParseResultType, Validation } from 'parse-domain'
 import { z } from 'zod'
 
-import { makeApiRequest } from './server'
+import { makeApiRequest } from '../utils/makeApiRequest'
 import type { destructuredDomainSchema } from './storage'
 import { storage } from './storage'
 
@@ -13,47 +12,32 @@ const domainSchema = z.object({
 })
 
 export type DestructuredDomain = z.infer<typeof destructuredDomainSchema>
+
 export type DestructuredDomainToTest = Omit<DestructuredDomain, 'vendorId'>
 
-export function destructureUrl(url: string) {
-  const urlObject = new URL(url.startsWith('http') ? url : `https://${url}`)
-  const parsedDomain = parseDomain(urlObject.hostname, {
-    validation: Validation.Lax,
-  })
-  if (parsedDomain.type !== ParseResultType.Listed)
-    throw new Error(`Unable to parse invalid url: ${url}`)
-  const { subDomains, domain, topLevelDomains } = parsedDomain
+export function destructureUrl(rawUrl: string) {
+  const url = new URL(rawUrl.startsWith('http') ? rawUrl : `https://${rawUrl}`)
 
-  if (!domain) throw new Error('Domain is required')
+  const parsed = parseDomain(url.hostname, { validation: Validation.Lax })
+
+  if (parsed.type !== ParseResultType.Listed) {
+    logger.warning(`Unable to parse domain: ${rawUrl}`)
+    return
+  }
+
+  const { subDomains, domain, topLevelDomains } = parsed
+
+  if (!domain) {
+    logger.warning(`Invalid URL: ${rawUrl}`)
+    return
+  }
 
   return {
     subdomains: subDomains.filter((subDomain) => subDomain !== 'www'),
     domain,
     topLevelDomains,
-    pathName: urlObject.pathname === '/' ? undefined : urlObject.pathname,
+    pathName: url.pathname === '/' ? undefined : url.pathname,
   }
-}
-
-export async function findVendorMatch(url: string) {
-  const domainList = await storage.get.domains()
-  if (!domainList || domainList?.length === 0) {
-    logger.error('No domains cached')
-    return
-  }
-  const visitedDomain = destructureUrl(url)
-  const match = findDomainMatch(domainList, visitedDomain)
-  if (!match) {
-    logger.info(`No app match found, ignoring request`)
-    return
-  }
-  const cachedVendor = await storage.get.cachedVendor(match.vendorId)
-  if (!cacheIsExpired(cachedVendor?.lastTracked)) {
-    // Visited recently, don't track
-    logger.info(`App visited recently, ignoring request`)
-    return
-  }
-  await storage.set.cachedVendor(match.vendorId) // Only update last tracked timestamp we're going to track
-  return match.vendorId
 }
 
 export function findDomainMatch(
@@ -106,7 +90,7 @@ function isPartialPathnameMatch(
   return trackedPathSegments.at(1) === testPathSegments?.at(1)
 }
 
-export async function downloadAllDomains() {
+export async function refreshDomainCache() {
   const domains = await makeApiRequest(
     {
       path: '/domains',
@@ -121,10 +105,4 @@ export async function downloadAllDomains() {
   }))
   await storage.set.domains(destructuredDomains)
   logger.success('Downloaded updated domain list')
-}
-
-function cacheIsExpired(lastVisited?: number) {
-  if (!lastVisited) return true
-  const millisecondsElapsed = Date.now() - lastVisited
-  return millisecondsElapsed > SESSION_TRACKING_COOLDOWN
 }

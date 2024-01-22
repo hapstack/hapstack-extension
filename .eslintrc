@@ -1,5 +1,5 @@
 {
-  "extends": ["custom/base", "custom/react"],
+  "extends": ["@hapstack/eslint-config/base", "@hapstack/eslint-config/react"],
   "root": true,
   "env": {
     "webextensions": true

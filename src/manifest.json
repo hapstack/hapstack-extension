@@ -10,9 +10,10 @@
   },
   "permissions": [
     "alarms",
+    "history",
     "identity",
     "identity.email",
     "storage",
-    "webNavigation"
+    "unlimitedStorage"
   ]
 }

@@ -1,4 +1,4 @@
-import { Logo, Spacer } from 'ui'
+import { Logo, Spacer } from '@hapstack/ui'
 
 export const Page = ({ children }: { children: React.ReactNode }) => (
   <main className="grid h-screen min-h-full w-full grid-cols-12 font-sans text-base text-primary antialiased">

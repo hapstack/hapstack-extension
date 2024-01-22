@@ -1,9 +1,9 @@
-import 'tailwind-config/tailwind.css'
+import '@hapstack/tailwind-config/tailwind.css'
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 // eslint-disable-next-line
-import { iconSpriteHref } from 'ui'
+import { iconSpriteHref } from '@hapstack/ui'
 
 import { Popup } from './Popup'
 
